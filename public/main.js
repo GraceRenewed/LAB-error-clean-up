@@ -99,6 +99,15 @@ const studentAreas = () => {
     <div id="voldy">No Death Eaters</div>`;
   renderToDOM('#student-container', domString);
 };
+
+// Create a new ID for the students
+const createId = (array) => {
+  if (array.length) {
+    const idArray = array.map((el) => el.id);
+    return Math.max(...idArray) + 1;
+  }
+  return 0;
+};
 // ********** LOGIC  ********** //
 // sorts student to a house and then place them in the students array
 const sortStudent = (e) => {
@@ -107,21 +116,20 @@ const sortStudent = (e) => {
 
   if (e.target.id === 'sorting') {
     const student = document.querySelector('#student-name');
+    students.push({
+      id: createId(students),
+      name: student.value,
+      house: sortingHat.house,
+      crest: sortingHat.crest
+    });
+    student.value = ''; // reset value of input
+    studentsOnDom('#students', students);
   }
 };
-
   // has to be put on the DOM after form is on DOM, not before
   // on form submit, sort student
-  document.querySelector('#sorting').addEventListener('submit', sortStudent);
-
-
-// create the new student object
-students.push({
-  id: createId(students),
-  name: student.value,
-  house: sortingHat.house,
-  crest: sortingHat.crest
-});
+  // create the new student object
+document.querySelector('#sorting').addEventListener('submit', sortStudent);
 
 // target filter buttons on Dom
 document.querySelector('#filter-container').addEventListener('click', (e) => {
@@ -146,7 +154,7 @@ const htmlStructure = () => {
     <div id="student-container" class="container d-flex"></div>
     `;
 
-  renderToDOM('#app', domString)
+  renderToDOM('#app', domString);
 };
 
 const header = () => {
@@ -173,27 +181,7 @@ const filterBtnRow = () => {
 
   renderToDOM('#filter-container', domString);
 };
-
-student.value = ''; // reset value of input
-studentsOnDom('#students', students);
-
-// Create a new ID for the students
-const createId = (array) => {
-  if (array.length) {
-    const idArray = array.map((el) => el.id);
-    return Math.max(...idArray) + 1;
-  }
-  return 0;
-};
-
-const startApp = () => {
-  htmlStructure(); // always load first
-  header();
-  startSortingBtn();
-  events(); // always load last
-};
-
-const events = () => {  
+const events = () => {
   // get form on the DOM on button click
   document.querySelector('#start-sorting').addEventListener('click', () => {
     // put html elements on the DOM on click
@@ -201,6 +189,13 @@ const events = () => {
     filterBtnRow(); // filter buttons
     studentAreas(); // students and voldy's army divs
   });
+};
+
+const startApp = () => {
+  htmlStructure(); // always load first
+  header();
+  startSortingBtn();
+  events(); // always load last
 };
 
 startApp();
